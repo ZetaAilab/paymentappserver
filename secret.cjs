@@ -7,8 +7,8 @@ const secret = "swapnesh@839";
 
 // 2. Define the exact payload you’ll send
 const payload = JSON.stringify({
-    "amount":12234,
-    "orderID":4532145643
+  amount: 12234,
+  orderID: 4532145643,
 });
 
 // 3. Compute the HMAC SHA256 signature

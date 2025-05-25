@@ -17,7 +17,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18' # Satisfies ">= 14.0.0"
+          node-version: "18" # Satisfies ">= 14.0.0"
 
       - name: Install Yarn
         run: npm install -g yarn
@@ -41,7 +41,10 @@ jobs:
       - name: Lint the codebase
         run: yarn lint
 
-      - name: Format code (check only)
+      - name: format the codebase
+        run: yarn format
+
+      - name: Format codebase
         run: yarn prettier --check .
 
       - name: TypeScript type check

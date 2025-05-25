@@ -1,5 +1,5 @@
 import Crypto from "crypto";
-import { NextFunction,Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 import envConfig from "../config/env.config.js";
 import { razorpayInstance } from "../config/razorpay.config.js";
@@ -12,11 +12,10 @@ import { razorpayInstance } from "../config/razorpay.config.js";
 export const receivePayment = async (
   req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ) => {
- 
-     const { amount } = req.body;
-     console.log(amount)
+  const { amount } = req.body;
+  console.log(amount);
   const options = {
     amount: amount * 100, // amount in the smallest currency unit
     currency: "INR",
@@ -31,35 +30,37 @@ export const receivePayment = async (
   }
 };
 
+export const verifyPayment = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { razorpay_payment_id, razorpay_order_id, razorpay_signature } =
+    req.body;
 
+  const secret = envConfig.RAZORPAY_WEBHOOK_SECRET;
+  if (!secret) {
+    res.status(500).json({ message: "Server misconfiguration" });
+    return;
+  }
 
-export const verifyPayment = async (req: Request, res: Response, next: NextFunction) => {
-    const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = req.body;
+  try {
+    const generatedSignature = Crypto.createHmac("sha256", secret)
+      .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+      .digest("hex");
 
-    const secret = envConfig.RAZORPAY_WEBHOOK_SECRET;
-    if (!secret) {
-        res.status(500).json({ message: "Server misconfiguration" });
-        return
+    if (generatedSignature === razorpay_signature) {
+      res.status(200).json({
+        message: "Payment verified successfully",
+        success: true,
+      });
+    } else {
+      res.status(400).json({
+        message: "Payment verification failed",
+        success: false,
+      });
     }
-
-    try {
-        const generatedSignature = Crypto.createHmac("sha256", secret)
-            .update(`${razorpay_order_id}|${razorpay_payment_id}`)
-            .digest("hex");
-
-        if (generatedSignature === razorpay_signature) {
-            res.status(200).json({
-                message: "Payment verified successfully",
-                success: true,
-            });
-        } else {
-            res.status(400).json({
-                message: "Payment verification failed",
-                success: false,
-            });
-        }
-    } catch (error) {
-        next(error);
-    }
+  } catch (error) {
+    next(error);
+  }
 };
-
