@@ -3,15 +3,15 @@ import cors from "cors";
 import express, { Request, Response as ExpressResponse } from "express";
 import mongoSanitize from "express-mongo-sanitize";
 import path from "path";
+// import Razorpay from "razorpay";
 import { fileURLToPath } from "url";
 
 import envConfig from "./config/env.config.js";
 import { startServer } from "./config/template.config.js";
-import RootRouter from "./routes/routes.js";
 import { receivePayment, verifyPayment } from "./controller/razorpay.controller.js";
 import { notFoundMiddleware } from "./middlewares/error.middleware.js";
 import { responseMiddleware } from "./middlewares/request.middleware.js";
-import Razorpay from "razorpay";
+import RootRouter from "./routes/routes.js";
 // import connectDB from "./config/db.config.js";
 
 const __filename = fileURLToPath(import.meta.url);

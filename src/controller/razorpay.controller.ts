@@ -1,25 +1,26 @@
-import { Request, Response, NextFunction } from "express";
 import Crypto from "crypto";
+import { NextFunction,Request, Response } from "express";
+
 import envConfig from "../config/env.config.js";
 import { razorpayInstance } from "../config/razorpay.config.js";
 
-interface RazorpayWebhookPayload {
-  amount: number;
-  orderID: string;
-}
+// interface RazorpayWebhookPayload {
+//   amount: number;
+//   orderID: string;
+// }
 
 export const receivePayment = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
  
      const { amount } = req.body;
      console.log(amount)
   const options = {
     amount: amount * 100, // amount in the smallest currency unit
-    currency: 'INR',
-    receipt: 'receipt_order_74394',
+    currency: "INR",
+    receipt: "receipt_order_74394",
   };
   try {
     const razorpay = razorpayInstance();
