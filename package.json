@@ -1,7 +1,7 @@
 {
   "name": "paymentbackend",
   "version": "1.0.0",
-  "description": "",
+  "description": "paymentbackend",
   "main": "./dist/server.js",
   "type": "module",
   "engines": {
